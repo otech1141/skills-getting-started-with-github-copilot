@@ -97,6 +97,28 @@ section h3 {
   color: #444;
 }
 
+.delete-btn {
+  margin-left: auto;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #c62828;
+}
+
 /* 小さな丸いアバター（イニシャル） */
 .participant-avatar {
   width: 34px;
