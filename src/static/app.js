@@ -20,11 +20,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Build participants HTML
+        let participantsHtml = "";
+        if (Array.isArray(details.participants) && details.participants.length > 0) {
+          const items = details.participants
+            .map((p) => {
+              // create initials from local-part of email or from name
+              const local = (p || "").split("@")[0] || "";
+              const initials = local
+                .split(/[\.\-_ ]+/)
+                .filter(Boolean)
+                .map(s => s[0]?.toUpperCase() || "")
+                .slice(0, 2)
+                .join("");
+              return `
+                <li class="participant-item">
+                  <span class="participant-avatar">${initials || "?"}</span>
+                  <span class="participant-name">${p}</span>
+                </li>
+              `;
+            })
+            .join("");
+          participantsHtml = `
+            <div class="participants-section">
+              <h5>Participants</h5>
+              <ul class="participants-list">
+                ${items}
+              </ul>
+            </div>
+          `;
+        } else {
+          participantsHtml = `
+            <div class="participants-section">
+              <h5>Participants</h5>
+              <p class="info">No participants yet — be the first to sign up!</p>
+            </div>
+          `;
+        }
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsHtml}
         `;
 
         activitiesList.appendChild(activityCard);
@@ -62,6 +101,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        // refresh activities to show updated participants
+        fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
